@@ -1,15 +1,16 @@
 {
-  "name": "server_ventas",
-  "version": "1.0.0",
-  "description": "Servicios REST para proyecto de Ingeniería de Software",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Diego Valadez Olmos",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4"
-  }
+    "name": "server_ventas",
+    "version": "1.0.0",
+    "description": "Servicios REST para proyecto de Ingeniería de Software",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server/server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Diego Valadez Olmos",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4"
+    }
 }
