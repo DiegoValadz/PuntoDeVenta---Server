@@ -19,6 +19,6 @@ let urlDB;
 if (process.env.NODE_ENV === "dev") {
     urlDB = "mongodb://localhost:27017/PuntoDeVenta";
 } else
-    urlDB = "mongodb://PVenta-User:Pa55word@ds125892.mlab.com:25892/punto_de_venta_bd"
+    urlDB = process.env.MONGO_URI;
 
 process.env.URLDB = urlDB;
