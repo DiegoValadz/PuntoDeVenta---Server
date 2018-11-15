@@ -1,5 +1,6 @@
 const Usuario = require("../models/usuario");
 const express = require('express');
+const { verificaToken, verificaRol } = require("../middlewares/autenticacion");
 const bcrypt = require('bcrypt');
 const _ = require("underscore");
 
@@ -9,14 +10,16 @@ app.get('/', function(req, res) {
     res.json('Hello World')
 })
 
-app.get('/usuarios', function(req, res) {
+app.get('/usuarios', verificaToken, (req, res) => {
+
+
+    // app.get('/usuarios', function(req, res) {
 
     let desde = req.query.desde || 0;
     let limite = req.query.limite || 5;
 
     desde = Number(desde);
     limite = Number(limite);
-
 
     Usuario.find({ userState: true })
         .skip(desde)
@@ -46,11 +49,9 @@ app.get('/usuarios', function(req, res) {
                 });
             });
         })
-
-
 })
 
-app.post('/usuarios', function(req, res) {
+app.post('/usuarios', [verificaToken, verificaRol], function(req, res) {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -74,7 +75,7 @@ app.post('/usuarios', function(req, res) {
 
 })
 
-app.put('/usuarios/:id', function(req, res) {
+app.put('/usuarios/:id', [verificaToken, verificaRol], (req, res) => {
         let id = req.params.id;
         let body = _.pick(req.body, ["nombre", "usuario", "tipo", "direccion", "ciudad", "estado", "cp", "telefono", "email", "img", "userState"]);
 
@@ -83,6 +84,7 @@ app.put('/usuarios/:id', function(req, res) {
                 return res.status(400).json({
                     ok: false,
                     err
+
                 })
             }
 
@@ -121,7 +123,7 @@ app.put('/usuarios/:id', function(req, res) {
     })
     */
 
-app.delete('/usuarios/:id', function(req, res) {
+app.delete('/usuarios/:id', [verificaToken, verificaRol], function(req, res) {
 
     let id = req.params.id;
     let cambiaEstado = {
