@@ -57,6 +57,15 @@ app.post('/usuarios', function(req, res) {
         usuario: body.usuario,
         contraseña: bcrypt.hashSync(body.contraseña, 10),
         tipo: body.tipo,
+        direccion: body.direccion,
+        ciudad: body.ciudad,
+        estado: body.estado,
+        cp: body.cp,
+        telefono: body.telefono,
+        email: body.email,
+        img: body.img,
+        userState: body.userState,
+        google: body.google
     });
 
     usuario.save((err, usuarioDB) => {
