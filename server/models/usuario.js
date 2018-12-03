@@ -9,6 +9,17 @@ let rolesValidos = {
 }
 
 let usuarioSchema = new Schema({
+    _id: {
+        type: String,
+        unique: true,
+        required: [true, "El id es necesario"]
+
+    },
+    /* ID_USER: {
+         type: String,
+         unique: true,
+         required: [true, "El id es necesario"]
+     }*/
     nombre: {
         type: String,
         required: [true, "El nombre es necesario"]
@@ -29,24 +40,31 @@ let usuarioSchema = new Schema({
         enum: rolesValidos
     },
     direccion: {
+        default: "",
         type: String
     },
     ciudad: {
+        default: "",
         type: String
     },
     estado: {
+        default: "",
         type: String
     },
     cp: {
+        default: "",
         type: String
     },
     telefono: {
+        default: "",
         type: String
     },
     email: {
+        default: "",
         type: String
     },
     img: {
+        default: "",
         type: String
     },
     userState: {
@@ -59,14 +77,14 @@ let usuarioSchema = new Schema({
     }
 
 });
-
+/*
 usuarioSchema.methods.toJSON = function() {
     let user = this;
     let userObject = user.toObject();
     delete userObject.contraseña;
 
     return userObject;
-}
+}*/
 
 usuarioSchema.plugin(uniqueValidator, {
     message: 'El {PATH} debe de ser unico'

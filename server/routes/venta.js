@@ -1,9 +1,11 @@
-const express = require('express');
-const Producto = require("../models/producto");
-const app = express();
+const express = require("express");
+
+let app = express();
+
+let Venta = require("../models/venta");
 
 
-app.get("/productos", (req, res) => {
+app.get("/ventas", (req, res) => {
 
     let desde = req.query.desde || 0;
     let limite = req.query.limite || 1000;
@@ -12,10 +14,10 @@ app.get("/productos", (req, res) => {
     limite = Number(limite);
 
 
-    Producto.find({ prodState: true })
+    Venta.find({ ventasState: true })
         .skip(desde)
         .limit(limite)
-        .exec((err, productos) => {
+        .exec((err, ventas) => {
 
             if (err) {
                 return res.status(400).json({
@@ -24,7 +26,7 @@ app.get("/productos", (req, res) => {
                 })
             }
 
-            Producto.count({ prodState: true }, (err, conteo) => {
+            Venta.count({ ventasState: true }, (err, conteo) => {
 
                 if (err) {
                     return res.status(400).json({
@@ -35,8 +37,8 @@ app.get("/productos", (req, res) => {
 
                 res.json({
                     ok: true,
-                    productos,
-                    total_productos: conteo
+                    ventas,
+                    total_ventas: conteo
                 });
             });
         })
@@ -46,23 +48,23 @@ app.get("/productos", (req, res) => {
 })
 
 
-app.post("/productos", function(req, res) {
+app.post("/ventas", function(req, res) {
 
     let body = req.body;
 
-    let producto = new Producto({
-        nombre: body.nombre,
+    let venta = new Venta({
         _id: body._id,
-        ID_PROD: body.ID_PROD,
-        precioVenta: body.precioVenta,
-        precioCompra: body.precioCompra,
-        existencia: body.existencia,
-        descripcion: body.descripcion,
-        img: body.img,
-        prodState: body.userState,
+        fecha: body.fecha,
+        hora: body.hora,
+        productos: body.productos,
+        total: body.total,
+        subtotal: body.subtotal,
+        iva: body.iva,
+        ventasState: body.ventasState,
     })
 
-    producto.save((err, productoBD) => {
+
+    venta.save((err, ventaDB) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -71,7 +73,7 @@ app.post("/productos", function(req, res) {
         }
         res.json({
             ok: true,
-            producto: productoBD
+            venta: ventaDB
         });
     })
 
@@ -80,10 +82,10 @@ app.post("/productos", function(req, res) {
 })
 
 
-app.put('/productos/:id', function(req, res) {
+app.put('/ventas/:id', function(req, res) {
     let id = req.params.id;
     let body = req.body;
-    Producto.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, productoDB) => {
+    Venta.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, ventaDB) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -93,19 +95,19 @@ app.put('/productos/:id', function(req, res) {
 
         res.json({
             ok: true,
-            producto: productoDB
+            venta: ventaDB
         });
     })
 })
 
-app.delete('/productos/:id', function(req, res) {
+app.delete('/ventas/:id', function(req, res) {
 
     let id = req.params.id;
     let cambiaEstado = {
-        prodState: false
+        ventasState: false
     }
 
-    Producto.findByIdAndUpdate(id, cambiaEstado, { new: true, runValidators: true }, (err, productoBorrado) => {
+    Venta.findByIdAndUpdate(id, cambiaEstado, { new: true, runValidators: true }, (err, ventaBorrada) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -115,7 +117,7 @@ app.delete('/productos/:id', function(req, res) {
 
         res.json({
             ok: true,
-            producto: productoBorrado
+            venta: ventaBorrada
         });
     })
 

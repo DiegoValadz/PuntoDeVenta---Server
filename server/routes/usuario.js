@@ -54,8 +54,10 @@ app.post('/usuarios', function(req, res) {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
+        _id: body._id,
         usuario: body.usuario,
-        contraseña: bcrypt.hashSync(body.contraseña, 10),
+        // contraseña: bcrypt.hashSync(body.contraseña, 10),
+        contraseña: body.contraseña,
         tipo: body.tipo,
         direccion: body.direccion,
         ciudad: body.ciudad,
@@ -85,9 +87,13 @@ app.post('/usuarios', function(req, res) {
 
 app.put('/usuarios/:id', function(req, res) {
         let id = req.params.id;
-        let body = _.pick(req.body, ["nombre", "usuario", "tipo", "direccion", "ciudad", "estado", "cp", "telefono", "email", "img", "userState"]);
-
-        Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
+        let body;
+        if (req.contraseña != " ") {
+            body = _.pick(req.body, ["_id", "nombre", "usuario", "contraseña", "tipo", "direccion", "ciudad", "estado", "cp", "telefono", "email", "img", "userState"]);
+        } else {
+            body = _.pick(req.body, ["_id", "nombre", "usuario", "tipo", "direccion", "ciudad", "estado", "cp", "telefono", "email", "img", "userState"]);
+        }
+        Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
             if (err) {
                 return res.status(400).json({
                     ok: false,
